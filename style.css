@@ -1,119 +1,54 @@
-:root {
-  --bg-dark: #0b1120;
-  --bg-light: #f8fafc;
-  --text-dark: #e5e7eb;
-  --text-light: #020617;
-  --primary: #38bdf8;
-  --card-dark: #020617;
-  --card-light: #ffffff;
+// DARK / LIGHT
+const toggle = document.getElementById("toggleTheme");
+const body = document.body;
+
+toggle.addEventListener("click", () => {
+  body.classList.toggle("dark");
+  body.classList.toggle("light");
+});
+
+// SCROLL ANIMATION
+const reveals = document.querySelectorAll(".reveal");
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add("active");
+    }
+  });
+}, { threshold: 0.2 });
+
+reveals.forEach(el => observer.observe(el));
+
+// SISTEMA DE SUGESTÕES
+const input = document.getElementById("suggestionInput");
+const button = document.getElementById("addSuggestion");
+const list = document.getElementById("suggestionsList");
+
+let suggestions = JSON.parse(localStorage.getItem("suggestions")) || [];
+
+function renderSuggestions() {
+  list.innerHTML = "";
+  suggestions.forEach(text => {
+    const div = document.createElement("div");
+    div.classList.add("suggestion-item");
+    div.textContent = text;
+    list.appendChild(div);
+  });
 }
 
-body {
-  margin: 0;
-  font-family: "Segoe UI", sans-serif;
-  transition: background 0.3s ease, color 0.3s ease;
-}
+button.addEventListener("click", () => {
+  const value = input.value.trim();
+  if (value !== "") {
+    suggestions.push(value);
+    localStorage.setItem("suggestions", JSON.stringify(suggestions));
+    input.value = "";
+    renderSuggestions();
+  }
+});
 
-/* DARK / LIGHT */
-body.dark {
-  background: var(--bg-dark);
-  color: var(--text-dark);
-}
+renderSuggestions();
 
-body.light {
-  background: var(--bg-light);
-  color: var(--text-light);
-}
-
-/* HERO */
-.hero {
-  padding: 100px 20px;
-  text-align: center;
-  background: linear-gradient(135deg, #020617, #020617);
-}
-
-.hero h1 {
-  font-size: 44px;
-  color: var(--primary);
-}
-
-.hero h2 {
-  font-weight: 400;
-  opacity: 0.85;
-}
-
-.hero p {
-  max-width: 600px;
-  margin: 20px auto;
-}
-
-button {
-  margin-top: 25px;
-  padding: 12px 18px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-/* SECTIONS */
-.section {
-  max-width: 1100px;
-  margin: auto;
-  padding: 70px 20px;
-}
-
-h3 {
-  color: var(--primary);
-  margin-bottom: 25px;
-}
-
-/* GRID */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-  gap: 18px;
-}
-
-.card {
-  padding: 22px;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.05);
-}
-
-/* PROJECTS */
-.project {
-  margin-top: 25px;
-  padding: 22px;
-  border-left: 4px solid var(--primary);
-  background: rgba(255, 255, 255, 0.03);
-}
-
-/* LIST */
-.list {
-  padding-left: 20px;
-}
-
-.list li {
-  margin-bottom: 10px;
-}
-
-/* FOOTER */
-footer {
-  text-align: center;
-  padding: 25px;
-  opacity: 0.6;
-}
-
-/* SCROLL ANIMATION */
-.reveal {
-  opacity: 0;
-  transform: translateY(45px);
-  transition: all 0.8s ease;
-}
-
-.reveal.active {
-  opacity: 1;
-  transform: translateY(0);
-}
-
+// BLOQUEAR CÓPIA
+document.addEventListener("contextmenu", e => e.preventDefault());
+document.addEventListener("copy", e => e.preventDefault());
