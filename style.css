@@ -1,54 +1,128 @@
-// DARK / LIGHT
-const toggle = document.getElementById("toggleTheme");
-const body = document.body;
-
-toggle.addEventListener("click", () => {
-  body.classList.toggle("dark");
-  body.classList.toggle("light");
-});
-
-// SCROLL ANIMATION
-const reveals = document.querySelectorAll(".reveal");
-
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add("active");
-    }
-  });
-}, { threshold: 0.2 });
-
-reveals.forEach(el => observer.observe(el));
-
-// SISTEMA DE SUGESTÕES
-const input = document.getElementById("suggestionInput");
-const button = document.getElementById("addSuggestion");
-const list = document.getElementById("suggestionsList");
-
-let suggestions = JSON.parse(localStorage.getItem("suggestions")) || [];
-
-function renderSuggestions() {
-  list.innerHTML = "";
-  suggestions.forEach(text => {
-    const div = document.createElement("div");
-    div.classList.add("suggestion-item");
-    div.textContent = text;
-    list.appendChild(div);
-  });
+:root {
+  --bg-dark: #0f172a;
+  --bg-light: #ffffff;
+  --text-dark: #f1f5f9;
+  --text-light: #0f172a;
+  --primary: #3b82f6;
 }
 
-button.addEventListener("click", () => {
-  const value = input.value.trim();
-  if (value !== "") {
-    suggestions.push(value);
-    localStorage.setItem("suggestions", JSON.stringify(suggestions));
-    input.value = "";
-    renderSuggestions();
+body {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  transition: background 0.3s ease, color 0.3s ease;
+  user-select: none;
+}
+
+body.dark {
+  background: var(--bg-dark);
+  color: var(--text-dark);
+}
+
+body.light {
+  background: var(--bg-light);
+  color: var(--text-light);
+}
+
+/* HERO */
+.hero {
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 32px;
+  color: var(--primary);
+}
+
+.hero h2 {
+  font-weight: 500;
+  margin-top: 5px;
+}
+
+.hero p {
+  margin-top: 15px;
+  opacity: 0.8;
+}
+
+.theme-btn {
+  margin-top: 20px;
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+/* SECTION */
+.section {
+  max-width: 900px;
+  margin: auto;
+  padding: 50px 20px;
+}
+
+h3 {
+  color: var(--primary);
+  margin-bottom: 20px;
+}
+
+/* GRID */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 15px;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
   }
-});
+}
 
-renderSuggestions();
+.card {
+  padding: 18px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.05);
+}
 
-// BLOQUEAR CÓPIA
-document.addEventListener("contextmenu", e => e.preventDefault());
-document.addEventListener("copy", e => e.preventDefault());
+body.dark .card {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* PROJECT */
+.project {
+  margin-top: 20px;
+  padding: 18px;
+  border-left: 4px solid var(--primary);
+}
+
+/* SUGESTÕES */
+textarea {
+  width: 100%;
+  max-width: 600px;
+  height: 90px;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  font-family: inherit;
+  user-select: text;
+}
+
+.submit-btn {
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+/* SCROLL ANIMATION */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.7s ease;
+}
+
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
